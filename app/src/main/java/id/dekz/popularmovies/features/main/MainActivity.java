@@ -13,6 +13,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        onAttachView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        onDetachView();
     }
 
     @Override
@@ -24,6 +32,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void onDetachView() {
-
+        presenter.onDetach();
     }
 }
