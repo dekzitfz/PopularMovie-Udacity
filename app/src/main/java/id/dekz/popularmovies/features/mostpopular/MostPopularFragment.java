@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.R;
 import id.dekz.popularmovies.adapter.MostPopularAdapter;
 import id.dekz.popularmovies.model.apiresponse.mostpopular.ResultsItem;
+import id.dekz.popularmovies.util.SnackBarBuilder;
 
 /**
  * Created by DEKZ on 6/16/2017.
@@ -32,9 +35,9 @@ public class MostPopularFragment extends Fragment
     private MostPopularAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private Parcelable layoutManagerSavedState;
-    private boolean loading = true;
 
     @BindView(R.id.rv_mostpopular)RecyclerView rv;
+    @BindView(R.id.parent_layout)RelativeLayout parentView;
 
     @Override
     public void onDetach() {
@@ -126,11 +129,13 @@ public class MostPopularFragment extends Fragment
 
     @Override
     public void onFailedReceivedData() {
-
+        SnackBarBuilder.showMessage(
+                parentView,
+                getResources().getString(R.string.failed_load_data)
+        );
     }
 
     @Override
     public void showMessage(String msg) {
-
     }
 }

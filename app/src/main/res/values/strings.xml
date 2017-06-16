@@ -2,4 +2,6 @@
     <string name="app_name">PopularMovies</string>
     <string name="most_popular" translatable="true">Most Popular</string>
     <string name="highest_rated" translatable="true">Highest Rated</string>
+
+    <string name="failed_load_data" translatable="true">Failed Load Data!</string>
 </resources>

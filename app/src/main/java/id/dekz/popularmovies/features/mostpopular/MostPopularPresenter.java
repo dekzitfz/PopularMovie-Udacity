@@ -39,7 +39,6 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
             int currentTotalCount = layoutManager.getItemCount();
 
             if(currentTotalCount <= lastItem + visibleThreshold){
-                Log.d("scroll", "bottom!");
                 currentPage++;
                 loadData();
             }
@@ -57,14 +56,13 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
                 if(response.isSuccessful()){
                     view.onDataReceived(response.body().getResults(), currentPage);
                 }else{
-                    Log.d("code ", ""+response.code());
-                    //failed
+                    view.onFailedReceivedData();
                 }
             }
 
             @Override
             public void onFailure(Call<MostPopularResponse> call, Throwable t) {
-                t.printStackTrace();
+                view.onFailedReceivedData();
             }
         });
     }
