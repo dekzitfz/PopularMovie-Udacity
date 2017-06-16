@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 25
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "id.dekz.popularmovies"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", API_KEY)
+        buildConfigField "String", "BASE_URL", "\"http://api.themoviedb.org/3/\""
+        buildConfigField "String", "BASE_URL_IMG", "\"http://image.tmdb.org/t/p/\""
     }
     buildTypes {
         release {

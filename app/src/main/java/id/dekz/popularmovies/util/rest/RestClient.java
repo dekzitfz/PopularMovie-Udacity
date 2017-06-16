@@ -18,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestClient {
 
     private APIService apiService;
-    private static final String BASE_URL = "http://api.themoviedb.org/3/";
 
     public RestClient() {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -42,7 +41,7 @@ public class RestClient {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

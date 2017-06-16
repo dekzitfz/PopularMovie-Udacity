@@ -1,15 +1,18 @@
 package id.dekz.popularmovies.features.mostpopular;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import id.dekz.popularmovies.R;
+import id.dekz.popularmovies.adapter.MostPopularAdapter;
 
 /**
  * Created by DEKZ on 6/16/2017.
@@ -20,6 +23,9 @@ public class MostPopularFragment extends Fragment
 
     private Unbinder unbinder;
     private MostPopularPresenter presenter;
+    private MostPopularAdapter adapter;
+
+    @BindView(R.id.rv_mostpopular)RecyclerView rv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,10 +47,19 @@ public class MostPopularFragment extends Fragment
     public void onAttachView() {
         presenter = new MostPopularPresenter();
         presenter.onAttach(this);
+
+        setupRecyclerView();
     }
 
     @Override
     public void onDetachView() {
         presenter.onDetach();
+    }
+
+    void setupRecyclerView(){
+        adapter = new MostPopularAdapter();
+        rv.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        rv.setHasFixedSize(true);
+        rv.setAdapter(adapter);
     }
 }
