@@ -10,7 +10,7 @@ import id.dekz.popularmovies.model.apiresponse.mostpopular.ResultsItem;
  */
 
 public interface MostPopularView extends BaseView {
-    void onDataReceived(List<ResultsItem> data);
+    void onDataReceived(List<ResultsItem> data, int page);
     void onLoadingData();
     void onFailedReceivedData();
     void showMessage(String msg);

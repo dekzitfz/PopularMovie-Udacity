@@ -28,6 +28,13 @@ public class MostPopularAdapter extends RecyclerView.Adapter<MostPopularViewHold
         notifyDataSetChanged();
     }
 
+    public void updateData(List<ResultsItem> list){
+        for(ResultsItem item : list){
+            this.list.add(item);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public MostPopularViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MostPopularViewHolder(

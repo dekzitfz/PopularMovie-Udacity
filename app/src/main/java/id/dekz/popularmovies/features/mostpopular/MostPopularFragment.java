@@ -32,6 +32,7 @@ public class MostPopularFragment extends Fragment
     private MostPopularAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private Parcelable layoutManagerSavedState;
+    private boolean loading = true;
 
     @BindView(R.id.rv_mostpopular)RecyclerView rv;
 
@@ -87,16 +88,35 @@ public class MostPopularFragment extends Fragment
         rv.setLayoutManager(gridLayoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
+
+        setupScrollListener();
     }
 
     @Override
-    public void onDataReceived(List<ResultsItem> data) {
-        adapter.replaceAll(data);
+    public void onDataReceived(List<ResultsItem> data, int page) {
+        if(page>1){
+            //update data
+            adapter.updateData(data);
+        }else{
+            //new data
+            adapter.replaceAll(data);
+        }
 
         //retain scroll position
         if(layoutManagerSavedState!=null){
             rv.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
         }
+
+
+    }
+
+    private void setupScrollListener(){
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                presenter.checkWhenScrolled(gridLayoutManager, dy);
+            }
+        });
     }
 
     @Override

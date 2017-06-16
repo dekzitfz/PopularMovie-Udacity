@@ -1,6 +1,7 @@
 package id.dekz.popularmovies.features.mostpopular;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 
 import id.dekz.popularmovies.App;
@@ -18,6 +19,7 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
 
     MostPopularView view;
     private Call<MostPopularResponse> getMostPopular;
+    private int currentPage = 1;
 
     @Override
     public void onAttach(MostPopularView BaseView) {
@@ -30,16 +32,30 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
         view = null;
     }
 
+    void checkWhenScrolled(GridLayoutManager layoutManager, int dy){
+        if(dy > 0){
+            final int visibleThreshold = 2;
+            int lastItem  = layoutManager.findLastCompletelyVisibleItemPosition();
+            int currentTotalCount = layoutManager.getItemCount();
+
+            if(currentTotalCount <= lastItem + visibleThreshold){
+                Log.d("scroll", "bottom!");
+                currentPage++;
+                loadData();
+            }
+        }
+    }
+
     void loadData(){
         getMostPopular = App.getRestClient()
                 .getService()
-                .getPopularMovie(1);
+                .getPopularMovie(currentPage);
 
         getMostPopular.enqueue(new Callback<MostPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<MostPopularResponse> call, @NonNull Response<MostPopularResponse> response) {
                 if(response.isSuccessful()){
-                    view.onDataReceived(response.body().getResults());
+                    view.onDataReceived(response.body().getResults(), currentPage);
                 }else{
                     Log.d("code ", ""+response.code());
                     //failed
