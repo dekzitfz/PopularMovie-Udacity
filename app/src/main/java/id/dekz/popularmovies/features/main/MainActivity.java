@@ -1,6 +1,7 @@
 package id.dekz.popularmovies.features.main;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private MainPresenter presenter;
     private TabsAdapter tabsAdapter;
 
+    private MostPopularFragment mostPopularFragment;
+    private HighRatedFragment highRatedFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +36,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        if (savedInstanceState != null) {
+            //Restore the fragment's instance
+            mostPopularFragment = (MostPopularFragment) getSupportFragmentManager()
+                    .getFragment(savedInstanceState, mostPopularString);
+            highRatedFragment = (HighRatedFragment) getSupportFragmentManager()
+                    .getFragment(savedInstanceState, highRatedString);
+        }else{
+            mostPopularFragment = new MostPopularFragment();
+            highRatedFragment = new HighRatedFragment();
+        }
+
         onAttachView();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //Save the fragment's instance
+        for(int i=0; i<tabsAdapter.getCount(); i++){
+            getSupportFragmentManager()
+                    .putFragment(
+                            outState,
+                            tabsAdapter.getPageTitle(i).toString(),
+                            tabsAdapter.getItem(i));
+        }
     }
 
     @Override
@@ -56,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void setupTabs(){
         tabsAdapter = new TabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(new MostPopularFragment(), mostPopularString);
-        tabsAdapter.addFragment(new HighRatedFragment(), highRatedString);
+        tabsAdapter.addFragment(mostPopularFragment, mostPopularString);
+        tabsAdapter.addFragment(highRatedFragment, highRatedString);
         container.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(container);
     }
