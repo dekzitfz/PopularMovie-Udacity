@@ -8,11 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import id.dekz.popularmovies.R;
 import id.dekz.popularmovies.adapter.MostPopularAdapter;
+import id.dekz.popularmovies.model.apiresponse.mostpopular.ResultsItem;
 
 /**
  * Created by DEKZ on 6/16/2017.
@@ -49,6 +52,7 @@ public class MostPopularFragment extends Fragment
         presenter.onAttach(this);
 
         setupRecyclerView();
+        presenter.loadData();
     }
 
     @Override
@@ -61,5 +65,25 @@ public class MostPopularFragment extends Fragment
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDataReceived(List<ResultsItem> data) {
+        adapter.replaceAll(data);
+    }
+
+    @Override
+    public void onLoadingData() {
+
+    }
+
+    @Override
+    public void onFailedReceivedData() {
+
+    }
+
+    @Override
+    public void showMessage(String msg) {
+
     }
 }

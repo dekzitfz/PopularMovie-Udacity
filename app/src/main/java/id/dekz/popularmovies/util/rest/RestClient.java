@@ -28,6 +28,7 @@ public class RestClient {
                         HttpUrl httpUrl = original.url()
                                 .newBuilder()
                                 .addQueryParameter("api_key", BuildConfig.API_KEY)
+                                .addQueryParameter("language", BuildConfig.DEFAULT_LANG)
                                 .build();
 
                         original = original.newBuilder()

@@ -13,6 +13,7 @@ android {
         buildConfigField("String", "API_KEY", API_KEY)
         buildConfigField "String", "BASE_URL", "\"http://api.themoviedb.org/3/\""
         buildConfigField "String", "BASE_URL_IMG", "\"http://image.tmdb.org/t/p/\""
+        buildConfigField "String", "DEFAULT_LANG", "\"en-US\""
     }
     buildTypes {
         release {
