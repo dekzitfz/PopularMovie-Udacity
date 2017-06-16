@@ -32,6 +32,10 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
         view = null;
     }
 
+    void resetPage(){
+        currentPage = 1;
+    }
+
     void checkWhenScrolled(GridLayoutManager layoutManager, int dy){
         if(dy > 0){
             final int visibleThreshold = 2;
@@ -46,6 +50,7 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
     }
 
     void loadData(){
+        view.onLoadingData();
         getMostPopular = App.getRestClient()
                 .getService()
                 .getPopularMovie(currentPage);

@@ -3,6 +3,7 @@ package id.dekz.popularmovies.features.mostpopular;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +29,7 @@ import id.dekz.popularmovies.util.SnackBarBuilder;
  */
 
 public class MostPopularFragment extends Fragment
-        implements MostPopularView {
+        implements MostPopularView, SwipeRefreshLayout.OnRefreshListener {
 
     private Unbinder unbinder;
     private MostPopularPresenter presenter;
@@ -38,6 +39,7 @@ public class MostPopularFragment extends Fragment
 
     @BindView(R.id.rv_mostpopular)RecyclerView rv;
     @BindView(R.id.parent_layout)RelativeLayout parentView;
+    @BindView(R.id.refresh_layout)SwipeRefreshLayout refreshLayout;
 
     @Override
     public void onDetach() {
@@ -93,10 +95,12 @@ public class MostPopularFragment extends Fragment
         rv.setAdapter(adapter);
 
         setupScrollListener();
+        refreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     public void onDataReceived(List<ResultsItem> data, int page) {
+        if(refreshLayout.isRefreshing()) refreshLayout.setRefreshing(false);
         if(page>1){
             //update data
             adapter.updateData(data);
@@ -109,8 +113,6 @@ public class MostPopularFragment extends Fragment
         if(layoutManagerSavedState!=null){
             rv.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
         }
-
-
     }
 
     private void setupScrollListener(){
@@ -124,11 +126,12 @@ public class MostPopularFragment extends Fragment
 
     @Override
     public void onLoadingData() {
-
+        refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void onFailedReceivedData() {
+        if(refreshLayout.isRefreshing()) refreshLayout.setRefreshing(false);
         SnackBarBuilder.showMessage(
                 parentView,
                 getResources().getString(R.string.failed_load_data)
@@ -137,5 +140,11 @@ public class MostPopularFragment extends Fragment
 
     @Override
     public void showMessage(String msg) {
+    }
+
+    @Override
+    public void onRefresh() {
+        presenter.resetPage();
+        presenter.loadData();
     }
 }
