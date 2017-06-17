@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.dekz.popularmovies.Constant;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     @BindView(R.id.swipe_refresh)SwipeRefreshLayout swipeRefresh;
     @BindView(R.id.rv)RecyclerView rv;
     @BindView(R.id.parent_main)RelativeLayout parentView;
+    @BindString(R.string.highest_rated)String highRatedString;
+    @BindString(R.string.most_popular)String mostPopularString;
 
     private MainPresenter presenter;
     private MovieListAdapter adapter;
@@ -37,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("position", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -47,9 +49,13 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
         if (savedInstanceState != null) {
             selectedSort = savedInstanceState.getString(Constant.KEY_SELECTED_CATEGORY);
+            if(selectedSort.equals(Constant.CATEGORY_MOST_POPULAR))
+                getSupportActionBar().setSubtitle(mostPopularString);
+            else getSupportActionBar().setSubtitle(highRatedString);
             layoutManagerSavedState = savedInstanceState.getParcelable(Constant.LAYOUT_MANAGER);
         }else{
             selectedSort = Constant.CATEGORY_MOST_POPULAR; //default
+            getSupportActionBar().setSubtitle(mostPopularString);;
         }
 
         onAttachView();
@@ -68,11 +74,13 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
                 selectedSort = Constant.CATEGORY_HIGH_RATED;
                 presenter.resetPage();
                 presenter.loadData(selectedSort);
+                getSupportActionBar().setSubtitle(highRatedString);
                 return true;
             case R.id.menu_most_popular:
                 selectedSort = Constant.CATEGORY_MOST_POPULAR;
                 presenter.resetPage();
                 presenter.loadData(selectedSort);
+                getSupportActionBar().setSubtitle(mostPopularString);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -81,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("position", "onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putString(Constant.KEY_SELECTED_CATEGORY, selectedSort);
         outState.putParcelable(Constant.LAYOUT_MANAGER, rv.getLayoutManager().onSaveInstanceState());
