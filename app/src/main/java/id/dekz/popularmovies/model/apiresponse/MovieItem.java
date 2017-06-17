@@ -1,9 +1,9 @@
-package id.dekz.popularmovies.model.apiresponse.mostpopular;
+package id.dekz.popularmovies.model.apiresponse;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class ResultsItem{
+public class MovieItem {
 
 	@SerializedName("overview")
 	private String overview;

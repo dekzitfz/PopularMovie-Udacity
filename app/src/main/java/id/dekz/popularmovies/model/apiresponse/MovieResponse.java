@@ -1,9 +1,9 @@
-package id.dekz.popularmovies.model.apiresponse.mostpopular;
+package id.dekz.popularmovies.model.apiresponse;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class MostPopularResponse{
+public class MovieResponse {
 
 	@SerializedName("page")
 	private int page;
@@ -12,7 +12,7 @@ public class MostPopularResponse{
 	private int totalPages;
 
 	@SerializedName("results")
-	private List<ResultsItem> results;
+	private List<MovieItem> results;
 
 	@SerializedName("total_results")
 	private int totalResults;
@@ -33,11 +33,11 @@ public class MostPopularResponse{
 		return totalPages;
 	}
 
-	public void setResults(List<ResultsItem> results){
+	public void setResults(List<MovieItem> results){
 		this.results = results;
 	}
 
-	public List<ResultsItem> getResults(){
+	public List<MovieItem> getResults(){
 		return results;
 	}
 

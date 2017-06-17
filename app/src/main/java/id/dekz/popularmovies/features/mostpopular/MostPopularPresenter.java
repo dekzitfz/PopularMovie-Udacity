@@ -2,11 +2,10 @@ package id.dekz.popularmovies.features.mostpopular;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 
 import id.dekz.popularmovies.App;
 import id.dekz.popularmovies.basemvp.BasePresenter;
-import id.dekz.popularmovies.model.apiresponse.mostpopular.MostPopularResponse;
+import id.dekz.popularmovies.model.apiresponse.MovieResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,7 +17,7 @@ import retrofit2.Response;
 public class MostPopularPresenter implements BasePresenter<MostPopularView> {
 
     MostPopularView view;
-    private Call<MostPopularResponse> getMostPopular;
+    private Call<MovieResponse> getMostPopular, getHighRated;
     private int currentPage = 1;
 
     @Override
@@ -55,9 +54,9 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
                 .getService()
                 .getPopularMovie(currentPage);
 
-        getMostPopular.enqueue(new Callback<MostPopularResponse>() {
+        getMostPopular.enqueue(new Callback<MovieResponse>() {
             @Override
-            public void onResponse(@NonNull Call<MostPopularResponse> call, @NonNull Response<MostPopularResponse> response) {
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if(response.isSuccessful()){
                     view.onDataReceived(response.body().getResults(), currentPage);
                 }else{
@@ -66,7 +65,7 @@ public class MostPopularPresenter implements BasePresenter<MostPopularView> {
             }
 
             @Override
-            public void onFailure(Call<MostPopularResponse> call, Throwable t) {
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
                 view.onFailedReceivedData();
             }
         });

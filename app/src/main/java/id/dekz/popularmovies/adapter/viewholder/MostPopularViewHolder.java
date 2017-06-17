@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.dekz.popularmovies.R;
-import id.dekz.popularmovies.model.apiresponse.mostpopular.ResultsItem;
+import id.dekz.popularmovies.model.apiresponse.MovieItem;
 import id.dekz.popularmovies.util.ImageURLBuilder;
 
 /**
@@ -25,7 +25,7 @@ public class MostPopularViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(ResultsItem data){
+    public void bind(MovieItem data){
         String src = ImageURLBuilder.getPosterURL(data.getPosterPath());
         Picasso.with(itemView.getContext())
                 .load(src)

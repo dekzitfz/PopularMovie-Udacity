@@ -6,11 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.List;
@@ -20,8 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.R;
-import id.dekz.popularmovies.adapter.MostPopularAdapter;
-import id.dekz.popularmovies.model.apiresponse.mostpopular.ResultsItem;
+import id.dekz.popularmovies.adapter.MovieListAdapter;
+import id.dekz.popularmovies.model.apiresponse.MovieItem;
 import id.dekz.popularmovies.util.SnackBarBuilder;
 
 /**
@@ -33,7 +31,7 @@ public class MostPopularFragment extends Fragment
 
     private Unbinder unbinder;
     private MostPopularPresenter presenter;
-    private MostPopularAdapter adapter;
+    private MovieListAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private Parcelable layoutManagerSavedState;
 
@@ -89,7 +87,7 @@ public class MostPopularFragment extends Fragment
     }
 
     void setupRecyclerView(){
-        adapter = new MostPopularAdapter();
+        adapter = new MovieListAdapter();
         rv.setLayoutManager(gridLayoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
@@ -99,7 +97,7 @@ public class MostPopularFragment extends Fragment
     }
 
     @Override
-    public void onDataReceived(List<ResultsItem> data, int page) {
+    public void onDataReceived(List<MovieItem> data, int page) {
         if(refreshLayout.isRefreshing()) refreshLayout.setRefreshing(false);
         if(page>1){
             //update data

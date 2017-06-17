@@ -4,11 +4,12 @@
 
     <item
         app:showAsAction="never"
-        android:id="@+id/menu_high_rated"
-        android:title="@string/highest_rated" />
+        android:id="@+id/menu_most_popular"
+        android:title="@string/most_popular" />
 
     <item
         app:showAsAction="never"
-        android:id="@+id/menu_most_popular"
-        android:title="@string/most_popular" />
+        android:id="@+id/menu_high_rated"
+        android:title="@string/highest_rated" />
+
 </menu>

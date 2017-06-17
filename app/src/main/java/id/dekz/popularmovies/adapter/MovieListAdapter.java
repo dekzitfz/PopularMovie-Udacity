@@ -9,27 +9,27 @@ import java.util.List;
 
 import id.dekz.popularmovies.R;
 import id.dekz.popularmovies.adapter.viewholder.MostPopularViewHolder;
-import id.dekz.popularmovies.model.apiresponse.mostpopular.ResultsItem;
+import id.dekz.popularmovies.model.apiresponse.MovieItem;
 
 /**
  * Created by DEKZ on 6/16/2017.
  */
 
-public class MostPopularAdapter extends RecyclerView.Adapter<MostPopularViewHolder> {
+public class MovieListAdapter extends RecyclerView.Adapter<MostPopularViewHolder> {
 
-    private List<ResultsItem> list = new ArrayList<>();
+    private List<MovieItem> list = new ArrayList<>();
 
-    public MostPopularAdapter() {
+    public MovieListAdapter() {
     }
 
-    public void replaceAll(List<ResultsItem> list){
+    public void replaceAll(List<MovieItem> list){
         this.list.clear();
         this.list = list;
         notifyDataSetChanged();
     }
 
-    public void updateData(List<ResultsItem> list){
-        for(ResultsItem item : list){
+    public void updateData(List<MovieItem> list){
+        for(MovieItem item : list){
             this.list.add(item);
         }
         notifyDataSetChanged();
