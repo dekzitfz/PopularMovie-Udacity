@@ -4,4 +4,7 @@
     <string name="highest_rated" translatable="true">Highest Rated</string>
 
     <string name="failed_load_data" translatable="true">Failed Load Data!</string>
+    <string name="release_date" translatable="true">Release Date</string>
+    <string name="vote_average" translatable="true">Vote Average</string>
+    <string name="synopsis" translatable="true">SYNOPSIS</string>
 </resources>
