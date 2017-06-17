@@ -63,10 +63,14 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_high_rated:
-                //do something
+                selectedSort = Constant.CATEGORY_HIGH_RATED;
+                presenter.resetPage();
+                presenter.loadData(selectedSort);
                 return true;
             case R.id.menu_most_popular:
-                //do
+                selectedSort = Constant.CATEGORY_MOST_POPULAR;
+                presenter.resetPage();
+                presenter.loadData(selectedSort);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
