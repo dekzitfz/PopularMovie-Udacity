@@ -37,19 +37,6 @@ public class MainPresenter implements BasePresenter<MainView> {
         currentPage = 1;
     }
 
-    void checkWhenScrolled(GridLayoutManager layoutManager, int dy){
-        if(dy > 0){
-            final int visibleThreshold = 2;
-            int lastItem  = layoutManager.findLastCompletelyVisibleItemPosition();
-            int currentTotalCount = layoutManager.getItemCount();
-
-            if(currentTotalCount <= lastItem + visibleThreshold){
-                currentPage++;
-                loadData(categorySelected);
-            }
-        }
-    }
-
     void loadData(String category){
         categorySelected = category;
         view.onLoadingData();

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("position", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d("position", "onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putString(Constant.KEY_SELECTED_CATEGORY, selectedSort);
         outState.putParcelable(Constant.LAYOUT_MANAGER, rv.getLayoutManager().onSaveInstanceState());
@@ -110,33 +113,21 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
         rv.setHasFixedSize(true);
         rv.setAdapter(adapter);
 
-        setupScrollListener();
         swipeRefresh.setOnRefreshListener(this);
-    }
-
-    private void setupScrollListener(){
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                presenter.checkWhenScrolled(gridLayoutManager, dy);
-            }
-        });
     }
 
     @Override
     public void onDataReceived(List<MovieItem> data, int page) {
         if(swipeRefresh.isRefreshing()) swipeRefresh.setRefreshing(false);
         if(page>1){
-            //update data
             adapter.updateData(data);
         }else{
-            //new data
             adapter.replaceAll(data);
-        }
 
-        //retain scroll position
-        if(layoutManagerSavedState!=null){
-            rv.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
+            //retain scroll position
+            if(layoutManagerSavedState!=null){
+                rv.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
+            }
         }
     }
 

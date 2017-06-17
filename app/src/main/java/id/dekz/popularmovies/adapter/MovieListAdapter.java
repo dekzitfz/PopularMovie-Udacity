@@ -29,9 +29,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MostPopularViewHolder
     }
 
     public void updateData(List<MovieItem> list){
-        for(MovieItem item : list){
-            this.list.add(item);
-        }
+        this.list.addAll(list);
         notifyDataSetChanged();
     }
 
