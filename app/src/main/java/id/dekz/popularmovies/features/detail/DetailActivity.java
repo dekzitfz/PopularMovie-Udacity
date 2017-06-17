@@ -43,8 +43,16 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
         onAttachView();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(
+                Constant.KEY_MOVIE,
+                getIntent().getStringExtra(Constant.KEY_MOVIE)
+        );
     }
 
     @Override
