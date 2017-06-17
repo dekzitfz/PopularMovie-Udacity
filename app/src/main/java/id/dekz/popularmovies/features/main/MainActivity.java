@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
             layoutManagerSavedState = savedInstanceState.getParcelable(Constant.LAYOUT_MANAGER);
         }else{
             selectedSort = Constant.CATEGORY_MOST_POPULAR; //default
-            getSupportActionBar().setSubtitle(mostPopularString);;
+            getSupportActionBar().setSubtitle(mostPopularString);
         }
 
         onAttachView();

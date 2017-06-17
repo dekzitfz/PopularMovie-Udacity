@@ -1,7 +1,6 @@
 package id.dekz.popularmovies.features.main;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 
 import id.dekz.popularmovies.App;
 import id.dekz.popularmovies.Constant;
