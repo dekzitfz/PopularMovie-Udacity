@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
                 presenter.loadData(selectedSort);
                 getSupportActionBar().setSubtitle(mostPopularString);
                 return true;
+            case R.id.menu_favorites:
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
