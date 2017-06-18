@@ -21,6 +21,10 @@
         </activity>
 
         <activity android:name=".features.detail.DetailActivity"/>
+        <provider
+            android:exported="false"
+            android:authorities="id.dekz.popularmovies"
+            android:name=".database.FavoriteContentProvider"/>
     </application>
 
 </manifest>
