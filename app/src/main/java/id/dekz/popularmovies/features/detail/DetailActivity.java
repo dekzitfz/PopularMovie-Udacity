@@ -49,6 +49,12 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.restartLoader(getSupportLoaderManager());
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(
@@ -67,6 +73,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     public void onAttachView() {
         presenter = new DetailPresenter();
         presenter.onAttach(this);
+
+        presenter.setupLoader(this, getContentResolver());
+        presenter.initLoader(getSupportLoaderManager());
 
         if(getIntent()!=null){
             presenter.getData(
