@@ -23,12 +23,12 @@ public class FavoriteDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_TABLE = "CREATE TABLE " + FavoriteEntry.TABLE_NAME + " (" +
                 FavoriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FavoriteEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-                FavoriteEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_RATING + " REAL NOT NULL, " +
-                FavoriteEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_BACKDROP + " TEXT NOT NULL, " +
+                FavoriteEntry.COLUMN_TITLE + " TEXT, " +
+                FavoriteEntry.COLUMN_POSTER + " TEXT, " +
+                FavoriteEntry.COLUMN_SYNOPSIS + " TEXT, " +
+                FavoriteEntry.COLUMN_RATING + " REAL, " +
+                FavoriteEntry.COLUMN_RELEASE_DATE + " TEXT, " +
+                FavoriteEntry.COLUMN_BACKDROP + " TEXT " +
                 "); ";
 
         db.execSQL(SQL_CREATE_TABLE);

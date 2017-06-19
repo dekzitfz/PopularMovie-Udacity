@@ -2,12 +2,14 @@ package id.dekz.popularmovies.features.detail;
 
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -32,6 +34,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @BindView(R.id.rating)TextView rating;
     @BindView(R.id.synopsis)TextView synopsis;
     @BindView(R.id.parentDetail)CoordinatorLayout parentView;
+    @BindView(R.id.fab)FloatingActionButton fabFavorite;
 
     private DetailPresenter presenter;
 
@@ -69,6 +72,16 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             presenter.getData(
                     getIntent().getStringExtra(Constant.KEY_MOVIE)
             );
+
+            fabFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.saveAsFavorite(
+                            getContentResolver(),
+                            presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
+                    );
+                }
+            });
         }
     }
 

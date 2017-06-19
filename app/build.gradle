@@ -9,6 +9,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", API_KEY)
         buildConfigField "String", "BASE_URL", "\"http://api.themoviedb.org/3/\""
@@ -46,6 +47,8 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 }
