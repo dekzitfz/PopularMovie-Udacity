@@ -3,6 +3,7 @@ package id.dekz.popularmovies.features.detail;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -41,6 +42,11 @@ public class DetailPresenter implements BasePresenter<DetailView> {
         ContentValues cv = new ContentValues();
         cv.put(FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID, item.getId());
         cv.put(FavoriteContract.FavoriteEntry.COLUMN_TITLE, item.getOriginalTitle());
+        cv.put(FavoriteContract.FavoriteEntry.COLUMN_BACKDROP, item.getBackdropPath());
+        cv.put(FavoriteContract.FavoriteEntry.COLUMN_POSTER, item.getPosterPath());
+        cv.put(FavoriteContract.FavoriteEntry.COLUMN_RATING, item.getVoteAverage());
+        cv.put(FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE, item.getReleaseDate());
+        cv.put(FavoriteContract.FavoriteEntry.COLUMN_SYNOPSIS, item.getOverview());
         resolver.insert(FavoriteContract.FavoriteEntry.CONTENT_URI, cv);
     }
 }

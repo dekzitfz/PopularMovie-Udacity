@@ -51,6 +51,9 @@ public class FavoriteContentProvider extends ContentProvider {
                 long id = db.insert(FavoriteEntry.TABLE_NAME, null, values);
                 if(id > 0){
                     result = ContentUris.withAppendedId(FavoriteEntry.CONTENT_URI, id);
+
+                    //noinspection ConstantConditions
+                    getContext().getContentResolver().notifyChange(uri, null);
                 }else{
                     throw new SQLException("Insert data failed to "+uri);
                 }
@@ -58,6 +61,7 @@ public class FavoriteContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown URI: "+uri);
         }
+
 
         return result;
     }
