@@ -91,7 +91,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 public void onClick(View v) {
 
                     if((Integer) fabFavorite.getTag() == R.drawable.ic_star_selected){
-
+                        presenter.unsetAsFavorite(
+                                getContentResolver(),
+                                presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
+                        );
                     }else{
                         presenter.saveAsFavorite(
                                 getContentResolver(),
@@ -147,5 +150,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             fabFavorite.setImageResource(R.drawable.ic_star_unselected);
             fabFavorite.setTag(R.drawable.ic_star_unselected);
         }
+    }
+
+    @Override
+    public void onRefreshLoader() {
+        presenter.restartLoader(getSupportLoaderManager());
     }
 }

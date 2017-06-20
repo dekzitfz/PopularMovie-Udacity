@@ -11,4 +11,5 @@ public interface DetailView extends BaseView {
     void onDataReceived(MovieItem movie);
     void onFailedReceiveData();
     void onStatusReceived(boolean isFavorite);
+    void onRefreshLoader();
 }

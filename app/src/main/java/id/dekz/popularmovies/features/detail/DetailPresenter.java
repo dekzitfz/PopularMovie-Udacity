@@ -60,6 +60,16 @@ public class DetailPresenter implements BasePresenter<DetailView> {
         resolver.insert(FavoriteContract.FavoriteEntry.CONTENT_URI, cv);
     }
 
+    void unsetAsFavorite(ContentResolver resolver, MovieItem item){
+        long result = resolver.delete(
+                uriWithIDBuilder(item.getId()),
+                null,
+                null
+        );
+
+        if(result > 0) view.onRefreshLoader();
+    }
+
     void setupLoader(final Context context, final ContentResolver contentResolver, final long movieID){
         loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
