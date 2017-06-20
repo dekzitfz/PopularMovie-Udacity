@@ -174,7 +174,7 @@ public class MainPresenter implements BasePresenter<MainView> {
                 );
                 movieItem.setId(
                         cursor.getLong(
-                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_RATING)
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID)
                         )
                 );
 
