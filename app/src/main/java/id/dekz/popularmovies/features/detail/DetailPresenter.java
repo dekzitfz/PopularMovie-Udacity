@@ -14,11 +14,15 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import id.dekz.popularmovies.App;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.basemvp.BasePresenter;
 import id.dekz.popularmovies.database.FavoriteContract;
 import id.dekz.popularmovies.model.apiresponse.MovieItem;
+import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.model.apiresponse.TrailerResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -145,7 +149,11 @@ public class DetailPresenter implements BasePresenter<DetailView> {
             @Override
             public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
                 if(response.isSuccessful()){
-                    view.onTrailerDataReceived(response.body().getResults());
+                    List<TrailerItem> trailers = new ArrayList<TrailerItem>();
+                    for(TrailerItem trailer : response.body().getResults()){
+                        if(trailer.getType().equals(Constant.VIDEO_TRAILER)) trailers.add(trailer);
+                    }
+                    view.onTrailerDataReceived(trailers);
                 }else{
                     //fail
                 }
