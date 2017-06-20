@@ -90,13 +90,14 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 @Override
                 public void onClick(View v) {
 
-                    if(fabFavorite.getTag() == R.drawable.ic_star_selected){
+                    if((Integer) fabFavorite.getTag() == R.drawable.ic_star_selected){
 
                     }else{
                         presenter.saveAsFavorite(
                                 getContentResolver(),
                                 presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
                         );
+                        presenter.restartLoader(getSupportLoaderManager());
                     }
                 }
             });
