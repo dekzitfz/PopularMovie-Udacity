@@ -1,5 +1,7 @@
 package id.dekz.popularmovies.adapter.viewholder;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.R;
 import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.util.TrailerUtil;
@@ -28,12 +31,23 @@ public class TrailerViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(TrailerItem data){
+    public void bind(final TrailerItem data){
         Picasso.with(itemView.getContext())
                 .load(TrailerUtil.getVideoThumbnailURL(data.getKey()))
                 .into(img);
 
         title.setText(data.getName());
         type.setText(data.getType());
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemView.getContext()
+                        .startActivity(new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(TrailerUtil.getYoutubeURL(data.getKey()))
+                        ));
+            }
+        });
     }
 }
