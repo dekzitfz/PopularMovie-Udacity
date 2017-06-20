@@ -1,6 +1,7 @@
 package id.dekz.popularmovies.util.rest;
 
 import id.dekz.popularmovies.model.apiresponse.MovieResponse;
+import id.dekz.popularmovies.model.apiresponse.ReviewResponse;
 import id.dekz.popularmovies.model.apiresponse.TrailerResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -21,4 +22,7 @@ public interface APIService {
 
     @GET("movie/{id}/videos?")
     Call<TrailerResponse> getTrailers(@Path("id") long id);
+
+    @GET("movie/{id}/reviews?")
+    Call<ReviewResponse> getReviews(@Path("id") long id);
 }
