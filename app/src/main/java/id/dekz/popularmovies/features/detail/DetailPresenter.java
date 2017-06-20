@@ -14,10 +14,15 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import id.dekz.popularmovies.App;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.basemvp.BasePresenter;
 import id.dekz.popularmovies.database.FavoriteContract;
 import id.dekz.popularmovies.model.apiresponse.MovieItem;
+import id.dekz.popularmovies.model.apiresponse.TrailerResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by DEKZ on 6/17/2017.
@@ -28,6 +33,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
     DetailView view;
     private Gson gson = new Gson();
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
+    private Call<TrailerResponse> trailerResponseCall;
 
     @Override
     public void onAttach(DetailView BaseView) {
@@ -36,6 +42,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
 
     @Override
     public void onDetach() {
+        if(trailerResponseCall != null) trailerResponseCall.cancel();
         view = null;
     }
 
@@ -127,5 +134,27 @@ public class DetailPresenter implements BasePresenter<DetailView> {
 
     private Uri uriWithIDBuilder(long id){
         return ContentUris.withAppendedId(FavoriteContract.FavoriteEntry.CONTENT_URI, id);
+    }
+
+    void getTrailers(long movieID){
+        trailerResponseCall = App.getRestClient()
+                .getService()
+                .getTrailers(movieID);
+
+        trailerResponseCall.enqueue(new Callback<TrailerResponse>() {
+            @Override
+            public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                if(response.isSuccessful()){
+                    view.onTrailerDataReceived(response.body().getResults());
+                }else{
+                    //fail
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TrailerResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }

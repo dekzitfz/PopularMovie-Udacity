@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +15,16 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.R;
+import id.dekz.popularmovies.adapter.TrailerAdapter;
 import id.dekz.popularmovies.model.apiresponse.MovieItem;
+import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.util.DateFormatter;
 import id.dekz.popularmovies.util.ImageURLBuilder;
 import id.dekz.popularmovies.util.SnackBarBuilder;
@@ -36,8 +43,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @BindView(R.id.synopsis)TextView synopsis;
     @BindView(R.id.parentDetail)CoordinatorLayout parentView;
     @BindView(R.id.fab)FloatingActionButton fabFavorite;
+    @BindView(R.id.rv_trailers)RecyclerView rvTrailers;
 
     private DetailPresenter presenter;
+    private TrailerAdapter trailerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +84,11 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         presenter = new DetailPresenter();
         presenter.onAttach(this);
 
+        setupRVTrailers();
+
         if(getIntent()!=null){
+            String json = getIntent().getStringExtra(Constant.KEY_MOVIE);
+            presenter.getTrailers(presenter.getMovie(json).getId());
             presenter.getData(
                     getIntent().getStringExtra(Constant.KEY_MOVIE)
             );
@@ -156,5 +169,18 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Override
     public void onRefreshLoader() {
         presenter.restartLoader(getSupportLoaderManager());
+    }
+
+    @Override
+    public void onTrailerDataReceived(List<TrailerItem> data) {
+        trailerAdapter.replaceAll(data);
+    }
+
+    private void setupRVTrailers(){
+        trailerAdapter = new TrailerAdapter();
+        rvTrailers.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        );
+        rvTrailers.setAdapter(trailerAdapter);
     }
 }
