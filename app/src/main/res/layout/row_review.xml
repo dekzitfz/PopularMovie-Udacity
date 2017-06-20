@@ -6,19 +6,18 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-
     <TextView
-        android:id="@+id/tv_content"
         android:textStyle="bold"
-        android:textSize="15sp"
-        tools:text="It has beautiful animation and beautiful characters. It is a funny, sweet and emotional roller coaster of a crowd-pleaser that manages to win your heart."
+        android:id="@+id/tv_author"
+        android:textSize="13sp"
+        tools:text="Sumiyati"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/tv_author"
-        android:textSize="12sp"
-        tools:text="Sumiyati"
+        android:id="@+id/tv_content"
+        android:textSize="11sp"
+        tools:text="It has beautiful animation and beautiful characters. It is a funny, sweet and emotional roller coaster of a crowd-pleaser that manages to win your heart."
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
