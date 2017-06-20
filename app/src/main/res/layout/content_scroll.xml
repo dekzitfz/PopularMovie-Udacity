@@ -89,16 +89,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_trailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <TextView
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:text="Failed To Load"
-            android:textColor="@color/icons"
-            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="@color/primary_text"
+            android:text="Reviews"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_trailers"
+            android:id="@+id/rv_reviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

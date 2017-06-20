@@ -15,7 +15,7 @@ public class ReviewResponse{
 	private int totalPages;
 
 	@SerializedName("results")
-	private List<ResultsItem> results;
+	private List<ReviewItem> results;
 
 	@SerializedName("total_results")
 	private int totalResults;
@@ -44,11 +44,11 @@ public class ReviewResponse{
 		return totalPages;
 	}
 
-	public void setResults(List<ResultsItem> results){
+	public void setResults(List<ReviewItem> results){
 		this.results = results;
 	}
 
-	public List<ResultsItem> getResults(){
+	public List<ReviewItem> getResults(){
 		return results;
 	}
 

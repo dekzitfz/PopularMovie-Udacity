@@ -2,7 +2,7 @@ package id.dekz.popularmovies.model.apiresponse;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ResultsItem{
+public class ReviewItem {
 
 	@SerializedName("author")
 	private String author;

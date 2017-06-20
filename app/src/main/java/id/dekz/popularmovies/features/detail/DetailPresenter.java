@@ -22,6 +22,7 @@ import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.basemvp.BasePresenter;
 import id.dekz.popularmovies.database.FavoriteContract;
 import id.dekz.popularmovies.model.apiresponse.MovieItem;
+import id.dekz.popularmovies.model.apiresponse.ReviewResponse;
 import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.model.apiresponse.TrailerResponse;
 import retrofit2.Call;
@@ -38,6 +39,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
     private Gson gson = new Gson();
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
     private Call<TrailerResponse> trailerResponseCall;
+    private Call<ReviewResponse> reviewResponseCall;
 
     @Override
     public void onAttach(DetailView BaseView) {
@@ -47,6 +49,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
     @Override
     public void onDetach() {
         if(trailerResponseCall != null) trailerResponseCall.cancel();
+        if(reviewResponseCall != null) reviewResponseCall.cancel();
         view = null;
     }
 
@@ -161,6 +164,28 @@ public class DetailPresenter implements BasePresenter<DetailView> {
 
             @Override
             public void onFailure(Call<TrailerResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    void getReviews(long movieID){
+        reviewResponseCall = App.getRestClient()
+                .getService()
+                .getReviews(movieID);
+
+        reviewResponseCall.enqueue(new Callback<ReviewResponse>() {
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                if(response.isSuccessful()){
+                    view.onReviewDataReceived(response.body().getResults());
+                }else{
+                    //fail
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable t) {
                 t.printStackTrace();
             }
         });

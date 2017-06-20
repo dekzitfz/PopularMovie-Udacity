@@ -23,8 +23,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.R;
+import id.dekz.popularmovies.adapter.ReviewAdapter;
 import id.dekz.popularmovies.adapter.TrailerAdapter;
 import id.dekz.popularmovies.model.apiresponse.MovieItem;
+import id.dekz.popularmovies.model.apiresponse.ReviewItem;
 import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.util.DateFormatter;
 import id.dekz.popularmovies.util.ImageURLBuilder;
@@ -45,10 +47,12 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @BindView(R.id.parentDetail)CoordinatorLayout parentView;
     @BindView(R.id.fab)FloatingActionButton fabFavorite;
     @BindView(R.id.rv_trailers)RecyclerView rvTrailers;
+    @BindView(R.id.rv_reviews)RecyclerView rvReviews;
     @BindView(R.id.nested_scroll)NestedScrollView nestedScroll;
 
     private DetailPresenter presenter;
     private TrailerAdapter trailerAdapter;
+    private ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +91,14 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         presenter.onAttach(this);
 
         setupRVTrailers();
+        setupRVReviews();
         setupNestedScrollListener();
 
         if(getIntent()!=null){
             String json = getIntent().getStringExtra(Constant.KEY_MOVIE);
             presenter.getTrailers(presenter.getMovie(json).getId());
+            presenter.getReviews(presenter.getMovie(json).getId());
+
             presenter.getData(
                     getIntent().getStringExtra(Constant.KEY_MOVIE)
             );
@@ -179,12 +186,23 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         trailerAdapter.replaceAll(data);
     }
 
+    @Override
+    public void onReviewDataReceived(List<ReviewItem> data) {
+        reviewAdapter.replaceAll(data);
+    }
+
     private void setupRVTrailers(){
         trailerAdapter = new TrailerAdapter();
         rvTrailers.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
         rvTrailers.setAdapter(trailerAdapter);
+    }
+
+    private void setupRVReviews(){
+        reviewAdapter = new ReviewAdapter();
+        rvReviews.setLayoutManager(new LinearLayoutManager(this));
+        rvReviews.setAdapter(reviewAdapter);
     }
 
     private void setupNestedScrollListener(){
