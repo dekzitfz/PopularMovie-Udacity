@@ -28,7 +28,6 @@ public class DetailPresenter implements BasePresenter<DetailView> {
     DetailView view;
     private Gson gson = new Gson();
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
-    private Cursor favoriteData = null;
 
     @Override
     public void onAttach(DetailView BaseView) {

@@ -1,10 +1,19 @@
 package id.dekz.popularmovies.features.main;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 
 import id.dekz.popularmovies.App;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.basemvp.BasePresenter;
+import id.dekz.popularmovies.database.FavoriteContract;
 import id.dekz.popularmovies.model.apiresponse.MovieResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +29,8 @@ public class MainPresenter implements BasePresenter<MainView> {
     private Call<MovieResponse> responseCall;
     private int currentPage = 1;
     private String categorySelected;
+    private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
+    private Cursor favoriteData = null;
 
     @Override
     public void onAttach(MainView BaseView) {
@@ -65,5 +76,53 @@ public class MainPresenter implements BasePresenter<MainView> {
                 view.onFailedReceivedData();
             }
         });
+    }
+
+    void setupLoader(final Context context, final ContentResolver contentResolver){
+        loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                return new AsyncTaskLoader<Cursor>(context) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        try {
+                            return contentResolver.query(
+                                    FavoriteContract.FavoriteEntry.CONTENT_URI,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                            );
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    protected void onStartLoading() {
+                        forceLoad();
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                Log.d("favorites found: ", ""+data.getCount());
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        };
+    }
+
+    void initLoader(LoaderManager loaderManager){
+        loaderManager.initLoader(Constant.LOADER_MAIN_ID, null, loaderCallbacks);
+    }
+
+    void restartLoader(LoaderManager loaderManager){
+        loaderManager.restartLoader(Constant.LOADER_MAIN_ID, null, loaderCallbacks);
     }
 }

@@ -82,7 +82,10 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
                 getSupportActionBar().setSubtitle(mostPopularString);
                 return true;
             case R.id.menu_favorites:
+                selectedSort = Constant.CATEGORY_FAVORITES;
+                getSupportActionBar().setSubtitle(mostPopularString);
 
+                presenter.initLoader(getSupportLoaderManager());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -106,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     public void onAttachView() {
         presenter = new MainPresenter();
         presenter.onAttach(this);
+
+        presenter.setupLoader(this, getContentResolver());
 
         setupRecyclerView();
         presenter.loadData(selectedSort);
