@@ -3,6 +3,7 @@ package id.dekz.popularmovies.features.detail;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +45,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @BindView(R.id.parentDetail)CoordinatorLayout parentView;
     @BindView(R.id.fab)FloatingActionButton fabFavorite;
     @BindView(R.id.rv_trailers)RecyclerView rvTrailers;
+    @BindView(R.id.nested_scroll)NestedScrollView nestedScroll;
 
     private DetailPresenter presenter;
     private TrailerAdapter trailerAdapter;
@@ -85,6 +87,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         presenter.onAttach(this);
 
         setupRVTrailers();
+        setupNestedScrollListener();
 
         if(getIntent()!=null){
             String json = getIntent().getStringExtra(Constant.KEY_MOVIE);
@@ -182,5 +185,18 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
         rvTrailers.setAdapter(trailerAdapter);
+    }
+
+    private void setupNestedScrollListener(){
+        nestedScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    fabFavorite.hide();
+                } else {
+                    fabFavorite.show();
+                }
+            }
+        });
     }
 }
