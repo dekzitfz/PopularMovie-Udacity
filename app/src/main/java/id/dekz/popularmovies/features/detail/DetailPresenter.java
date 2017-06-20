@@ -1,6 +1,7 @@
 package id.dekz.popularmovies.features.detail;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -59,7 +60,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
         resolver.insert(FavoriteContract.FavoriteEntry.CONTENT_URI, cv);
     }
 
-    void setupLoader(final Context context, final ContentResolver contentResolver){
+    void setupLoader(final Context context, final ContentResolver contentResolver, final long movieID){
         loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -68,7 +69,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
                     public Cursor loadInBackground() {
                         try {
                             return contentResolver.query(
-                                    FavoriteContract.FavoriteEntry.CONTENT_URI,
+                                    uriWithIDBuilder(movieID),
                                     null,
                                     null,
                                     null,
@@ -89,7 +90,7 @@ public class DetailPresenter implements BasePresenter<DetailView> {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                Log.d("size -> ", ""+data.getCount());
+                setFavoriteButton(data.getCount());
             }
 
             @Override
@@ -105,5 +106,17 @@ public class DetailPresenter implements BasePresenter<DetailView> {
 
     void restartLoader(LoaderManager loaderManager){
         loaderManager.restartLoader(Constant.LOADER_ID, null, loaderCallbacks);
+    }
+
+    private void setFavoriteButton(int count){
+        if(count > 0){
+            view.onStatusReceived(true);
+        }else{
+            view.onStatusReceived(false);
+        }
+    }
+
+    private Uri uriWithIDBuilder(long id){
+        return ContentUris.withAppendedId(FavoriteContract.FavoriteEntry.CONTENT_URI, id);
     }
 }

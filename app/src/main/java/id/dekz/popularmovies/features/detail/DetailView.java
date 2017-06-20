@@ -10,4 +10,5 @@ import id.dekz.popularmovies.model.apiresponse.MovieItem;
 public interface DetailView extends BaseView {
     void onDataReceived(MovieItem movie);
     void onFailedReceiveData();
+    void onStatusReceived(boolean isFavorite);
 }

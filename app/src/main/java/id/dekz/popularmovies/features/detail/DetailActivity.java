@@ -74,21 +74,30 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         presenter = new DetailPresenter();
         presenter.onAttach(this);
 
-        presenter.setupLoader(this, getContentResolver());
-        presenter.initLoader(getSupportLoaderManager());
-
         if(getIntent()!=null){
             presenter.getData(
                     getIntent().getStringExtra(Constant.KEY_MOVIE)
             );
 
+            presenter.setupLoader(
+                    this,
+                    getContentResolver(),
+                    presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE)).getId()
+            );
+            presenter.initLoader(getSupportLoaderManager());
+
             fabFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    presenter.saveAsFavorite(
-                            getContentResolver(),
-                            presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
-                    );
+
+                    if(fabFavorite.getTag() == R.drawable.ic_star_selected){
+
+                    }else{
+                        presenter.saveAsFavorite(
+                                getContentResolver(),
+                                presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
+                        );
+                    }
                 }
             });
         }
@@ -126,5 +135,16 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     public void onFailedReceiveData() {
         parentView.setVisibility(View.GONE);
         SnackBarBuilder.showMessage(parentView, getResources().getString(R.string.failed_load_data));
+    }
+
+    @Override
+    public void onStatusReceived(boolean isFavorite) {
+        if(isFavorite){
+            fabFavorite.setImageResource(R.drawable.ic_star_selected);
+            fabFavorite.setTag(R.drawable.ic_star_selected);
+        }else{
+            fabFavorite.setImageResource(R.drawable.ic_star_unselected);
+            fabFavorite.setTag(R.drawable.ic_star_unselected);
+        }
     }
 }
