@@ -10,10 +10,14 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import id.dekz.popularmovies.App;
 import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.basemvp.BasePresenter;
 import id.dekz.popularmovies.database.FavoriteContract;
+import id.dekz.popularmovies.model.apiresponse.MovieItem;
 import id.dekz.popularmovies.model.apiresponse.MovieResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +47,10 @@ public class MainPresenter implements BasePresenter<MainView> {
         view = null;
     }
 
+    void setCategory(String category){
+        categorySelected = category;
+    }
+
     void resetPage(){
         currentPage = 1;
     }
@@ -55,7 +63,7 @@ public class MainPresenter implements BasePresenter<MainView> {
             responseCall = App.getRestClient()
                     .getService()
                     .getPopularMovie(currentPage);
-        }else{
+        }else if(category.equals(Constant.CATEGORY_HIGH_RATED)){
             responseCall = App.getRestClient()
                     .getService()
                     .getHighRatedMovie(currentPage);
@@ -101,14 +109,16 @@ public class MainPresenter implements BasePresenter<MainView> {
 
                     @Override
                     protected void onStartLoading() {
-                        forceLoad();
+                        if(categorySelected.equals(Constant.CATEGORY_FAVORITES)) forceLoad();
                     }
                 };
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                Log.d("favorites found: ", ""+data.getCount());
+                Log.d("favorites found ", ""+data.getCount());
+                favoriteData = data;
+                generateFromCursor(favoriteData);
             }
 
             @Override
@@ -124,5 +134,56 @@ public class MainPresenter implements BasePresenter<MainView> {
 
     void restartLoader(LoaderManager loaderManager){
         loaderManager.restartLoader(Constant.LOADER_MAIN_ID, null, loaderCallbacks);
+    }
+
+    private void generateFromCursor(Cursor cursor){
+        List<MovieItem> movies = new ArrayList<>();
+        cursor.moveToPosition(-1);
+        try {
+            while (cursor.moveToNext()) {
+                MovieItem movieItem = new MovieItem();
+                movieItem.setPosterPath(
+                        cursor.getString(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_POSTER)
+                        )
+                );
+                movieItem.setOriginalTitle(
+                        cursor.getString(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_TITLE)
+                        )
+                );
+                movieItem.setBackdropPath(
+                        cursor.getString(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_BACKDROP)
+                        )
+                );
+                movieItem.setReleaseDate(
+                        cursor.getString(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE)
+                        )
+                );
+                movieItem.setOverview(
+                        cursor.getString(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_SYNOPSIS)
+                        )
+                );
+                movieItem.setVoteAverage(
+                        cursor.getDouble(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_RATING)
+                        )
+                );
+                movieItem.setId(
+                        cursor.getLong(
+                                cursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_RATING)
+                        )
+                );
+
+                movies.add(movieItem);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        view.onDataReceived(movies, 1);
     }
 }

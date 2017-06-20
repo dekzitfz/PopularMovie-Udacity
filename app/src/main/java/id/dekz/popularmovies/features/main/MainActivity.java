@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     @BindView(R.id.parent_main)RelativeLayout parentView;
     @BindString(R.string.highest_rated)String highRatedString;
     @BindString(R.string.most_popular)String mostPopularString;
+    @BindString(R.string.favorites)String favoritesString;
 
     private MainPresenter presenter;
     private MovieListAdapter adapter;
@@ -83,9 +85,11 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
                 return true;
             case R.id.menu_favorites:
                 selectedSort = Constant.CATEGORY_FAVORITES;
-                getSupportActionBar().setSubtitle(mostPopularString);
+                getSupportActionBar().setSubtitle(favoritesString);
 
-                presenter.initLoader(getSupportLoaderManager());
+                presenter.setCategory(selectedSort);
+                presenter.setupLoader(this, getContentResolver());
+                presenter.restartLoader(getSupportLoaderManager());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -110,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
         presenter = new MainPresenter();
         presenter.onAttach(this);
 
-        presenter.setupLoader(this, getContentResolver());
-
         setupRecyclerView();
         presenter.loadData(selectedSort);
     }
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
     @Override
     public void onDataReceived(List<MovieItem> data, int page) {
+        Log.d("received", ""+data.size());
         if(swipeRefresh.isRefreshing()) swipeRefresh.setRefreshing(false);
         if(page>1){
             adapter.updateData(data);
@@ -161,7 +164,11 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
     @Override
     public void onRefresh() {
-        presenter.resetPage();
-        presenter.loadData(selectedSort);
+        if(selectedSort.equals(Constant.CATEGORY_FAVORITES)){
+            presenter.restartLoader(getSupportLoaderManager());
+        }else{
+            presenter.resetPage();
+            presenter.loadData(selectedSort);
+        }
     }
 }
