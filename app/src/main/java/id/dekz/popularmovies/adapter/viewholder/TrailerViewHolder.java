@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import id.dekz.popularmovies.Constant;
 import id.dekz.popularmovies.R;
 import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.util.TrailerUtil;

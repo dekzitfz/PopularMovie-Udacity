@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/tv_content"
-        android:textSize="11sp"
+        android:textSize="12sp"
         tools:text="It has beautiful animation and beautiful characters. It is a funny, sweet and emotional roller coaster of a crowd-pleaser that manages to win your heart."
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -19,7 +19,6 @@
         <ImageView
             android:id="@+id/img_trailer"
             android:scaleType="centerCrop"
-            tools:src="@drawable/trailer_thumb"
             android:layout_width="150dp"
             android:layout_height="150dp" />
 

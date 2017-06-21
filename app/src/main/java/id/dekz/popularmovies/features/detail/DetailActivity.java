@@ -8,12 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import id.dekz.popularmovies.model.apiresponse.ReviewItem;
 import id.dekz.popularmovies.model.apiresponse.TrailerItem;
 import id.dekz.popularmovies.util.DateFormatter;
 import id.dekz.popularmovies.util.ImageURLBuilder;
-import id.dekz.popularmovies.util.SnackBarBuilder;
 
 /**
  * Created by DEKZ on 6/17/2017.
@@ -59,7 +56,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("tag", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
@@ -83,7 +79,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("tag", "onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putString(
                 Constant.KEY_MOVIE,
@@ -107,7 +102,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void onAttachView() {
-        Log.d("tag", "onAttachView");
         presenter = new DetailPresenter();
         presenter.onAttach(this);
 

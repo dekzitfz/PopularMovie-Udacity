@@ -85,7 +85,7 @@
             android:textStyle="bold"
             android:textSize="17sp"
             android:textColor="@color/icons"
-            android:text="Trailers"
+            android:text="@string/trailers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -111,7 +111,7 @@
             android:textStyle="bold"
             android:textSize="17sp"
             android:textColor="@color/primary_text"
-            android:text="Reviews"
+            android:text="@string/reviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

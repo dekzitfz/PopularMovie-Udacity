@@ -8,4 +8,6 @@
     <string name="vote_average" translatable="true">Vote Average</string>
     <string name="synopsis" translatable="true">SYNOPSIS</string>
     <string name="favorites" translatable="true">Favorites</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailers">Trailers</string>
 </resources>
