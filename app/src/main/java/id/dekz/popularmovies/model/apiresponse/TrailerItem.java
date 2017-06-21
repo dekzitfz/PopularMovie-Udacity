@@ -1,8 +1,11 @@
 package id.dekz.popularmovies.model.apiresponse;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class TrailerItem {
+public class TrailerItem implements Parcelable {
 
 	@SerializedName("site")
 	private String site;
@@ -27,6 +30,29 @@ public class TrailerItem {
 
 	@SerializedName("key")
 	private String key;
+
+	protected TrailerItem(Parcel in) {
+		site = in.readString();
+		size = in.readInt();
+		iso31661 = in.readString();
+		name = in.readString();
+		id = in.readString();
+		type = in.readString();
+		iso6391 = in.readString();
+		key = in.readString();
+	}
+
+	public static final Creator<TrailerItem> CREATOR = new Creator<TrailerItem>() {
+		@Override
+		public TrailerItem createFromParcel(Parcel in) {
+			return new TrailerItem(in);
+		}
+
+		@Override
+		public TrailerItem[] newArray(int size) {
+			return new TrailerItem[size];
+		}
+	};
 
 	public void setSite(String site){
 		this.site = site;
@@ -106,4 +132,21 @@ public class TrailerItem {
 			",key = '" + key + '\'' + 
 			"}";
 		}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(site);
+		dest.writeInt(size);
+		dest.writeString(iso31661);
+		dest.writeString(name);
+		dest.writeString(id);
+		dest.writeString(type);
+		dest.writeString(iso6391);
+		dest.writeString(key);
+	}
 }

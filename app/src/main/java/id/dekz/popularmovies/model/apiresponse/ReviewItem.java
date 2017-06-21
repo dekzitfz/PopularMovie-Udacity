@@ -1,8 +1,11 @@
 package id.dekz.popularmovies.model.apiresponse;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class ReviewItem {
+public class ReviewItem implements Parcelable {
 
 	@SerializedName("author")
 	private String author;
@@ -15,6 +18,25 @@ public class ReviewItem {
 
 	@SerializedName("url")
 	private String url;
+
+	protected ReviewItem(Parcel in) {
+		author = in.readString();
+		id = in.readString();
+		content = in.readString();
+		url = in.readString();
+	}
+
+	public static final Creator<ReviewItem> CREATOR = new Creator<ReviewItem>() {
+		@Override
+		public ReviewItem createFromParcel(Parcel in) {
+			return new ReviewItem(in);
+		}
+
+		@Override
+		public ReviewItem[] newArray(int size) {
+			return new ReviewItem[size];
+		}
+	};
 
 	public void setAuthor(String author){
 		this.author = author;
@@ -58,4 +80,17 @@ public class ReviewItem {
 			",url = '" + url + '\'' + 
 			"}";
 		}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(author);
+		dest.writeString(id);
+		dest.writeString(content);
+		dest.writeString(url);
+	}
 }

@@ -158,12 +158,13 @@ public class DetailPresenter implements BasePresenter<DetailView> {
                     }
                     view.onTrailerDataReceived(trailers);
                 }else{
-                    //fail
+                    view.onFailedReceiveData();
                 }
             }
 
             @Override
             public void onFailure(Call<TrailerResponse> call, Throwable t) {
+                view.onFailedReceiveData();
                 t.printStackTrace();
             }
         });
@@ -180,12 +181,13 @@ public class DetailPresenter implements BasePresenter<DetailView> {
                 if(response.isSuccessful()){
                     view.onReviewDataReceived(response.body().getResults());
                 }else{
-                    //fail
+                    view.onFailedReceiveData();
                 }
             }
 
             @Override
             public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                view.onFailedReceiveData();
                 t.printStackTrace();
             }
         });

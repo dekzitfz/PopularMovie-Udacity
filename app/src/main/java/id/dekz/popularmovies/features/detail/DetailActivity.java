@@ -53,14 +53,25 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     private DetailPresenter presenter;
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
+    private int[] nestedScrollPosition = new int[2];
+    private ArrayList<TrailerItem> trailers = new ArrayList<>();
+    private ArrayList<ReviewItem> reviews = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("tag", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        if(savedInstanceState != null){
+            nestedScrollPosition = savedInstanceState.getIntArray(Constant.KEY_SCROLL_POSITION);
+            trailers = savedInstanceState.getParcelableArrayList(Constant.KEY_STATE_TRAILER);
+            reviews = savedInstanceState.getParcelableArrayList(Constant.KEY_STATE_REVIEW);
+        }
+
         onAttachView();
     }
 
@@ -72,11 +83,20 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d("tag", "onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putString(
                 Constant.KEY_MOVIE,
                 getIntent().getStringExtra(Constant.KEY_MOVIE)
         );
+
+        outState.putIntArray(
+                Constant.KEY_SCROLL_POSITION,
+                new int[]{nestedScrollPosition[0], nestedScrollPosition[1]}
+        );
+
+        outState.putParcelableArrayList(Constant.KEY_STATE_TRAILER, trailers);
+        outState.putParcelableArrayList(Constant.KEY_STATE_REVIEW, reviews);
     }
 
     @Override
@@ -87,6 +107,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void onAttachView() {
+        Log.d("tag", "onAttachView");
         presenter = new DetailPresenter();
         presenter.onAttach(this);
 
@@ -95,18 +116,16 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         setupNestedScrollListener();
 
         if(getIntent()!=null){
-            String json = getIntent().getStringExtra(Constant.KEY_MOVIE);
+            final String json = getIntent().getStringExtra(Constant.KEY_MOVIE);
             presenter.getTrailers(presenter.getMovie(json).getId());
             presenter.getReviews(presenter.getMovie(json).getId());
 
-            presenter.getData(
-                    getIntent().getStringExtra(Constant.KEY_MOVIE)
-            );
+            presenter.getData(json);
 
             presenter.setupLoader(
                     this,
                     getContentResolver(),
-                    presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE)).getId()
+                    presenter.getMovie(json).getId()
             );
             presenter.initLoader(getSupportLoaderManager());
 
@@ -117,12 +136,12 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                     if((Integer) fabFavorite.getTag() == R.drawable.ic_star_selected){
                         presenter.unsetAsFavorite(
                                 getContentResolver(),
-                                presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
+                                presenter.getMovie(json)
                         );
                     }else{
                         presenter.saveAsFavorite(
                                 getContentResolver(),
-                                presenter.getMovie(getIntent().getStringExtra(Constant.KEY_MOVIE))
+                                presenter.getMovie(json)
                         );
                         presenter.restartLoader(getSupportLoaderManager());
                     }
@@ -161,8 +180,19 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void onFailedReceiveData() {
-        parentView.setVisibility(View.GONE);
-        SnackBarBuilder.showMessage(parentView, getResources().getString(R.string.failed_load_data));
+        if(trailers != null){
+            List<TrailerItem> listTrailer = new ArrayList<>();
+            for(TrailerItem t : trailers){listTrailer.add(t);}
+            trailerAdapter.replaceAll(listTrailer);
+        }
+
+        if(reviews != null){
+            List<ReviewItem> listReview = new ArrayList<>();
+            for(ReviewItem r : reviews){listReview.add(r);}
+            reviewAdapter.replaceAll(listReview);
+        }
+
+        restoreScrollPosition();
     }
 
     @Override
@@ -183,12 +213,19 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void onTrailerDataReceived(List<TrailerItem> data) {
-        trailerAdapter.replaceAll(data);
+        trailers.clear();
+        for(TrailerItem trailer : data){
+            trailers.add(trailer);
+        }
+        trailerAdapter.replaceAll(trailers);
     }
 
     @Override
     public void onReviewDataReceived(List<ReviewItem> data) {
-        reviewAdapter.replaceAll(data);
+        reviews.clear();
+        for(ReviewItem r : data){reviews.add(r);}
+        reviewAdapter.replaceAll(reviews);
+        restoreScrollPosition();
     }
 
     private void setupRVTrailers(){
@@ -210,6 +247,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         nestedScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                nestedScrollPosition[0] = scrollX;
+                nestedScrollPosition[1] = scrollY;
+
                 if (scrollY > oldScrollY) {
                     fabFavorite.hide();
                 } else {
@@ -217,5 +257,16 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 }
             }
         });
+    }
+
+    private void restoreScrollPosition(){
+        if(nestedScrollPosition != null){
+            nestedScroll.post(new Runnable() {
+                @Override
+                public void run() {
+                    nestedScroll.scrollTo(nestedScrollPosition[0], nestedScrollPosition[1]);
+                }
+            });
+        }
     }
 }
