@@ -203,6 +203,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         reviewAdapter = new ReviewAdapter();
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         rvReviews.setAdapter(reviewAdapter);
+        rvReviews.setNestedScrollingEnabled(false);
     }
 
     private void setupNestedScrollListener(){
