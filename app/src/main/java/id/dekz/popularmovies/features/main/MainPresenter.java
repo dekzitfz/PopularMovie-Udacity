@@ -57,33 +57,36 @@ public class MainPresenter implements BasePresenter<MainView> {
 
     void loadData(String category){
         categorySelected = category;
-        view.onLoadingData();
 
         if(category.equals(Constant.CATEGORY_MOST_POPULAR)){
+            view.onLoadingData();
             responseCall = App.getRestClient()
                     .getService()
                     .getPopularMovie(currentPage);
         }else if(category.equals(Constant.CATEGORY_HIGH_RATED)){
+            view.onLoadingData();
             responseCall = App.getRestClient()
                     .getService()
                     .getHighRatedMovie(currentPage);
         }
 
-        responseCall.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
-                if(response.isSuccessful()){
-                    view.onDataReceived(response.body().getResults(), currentPage);
-                }else{
+        if(responseCall != null){
+            responseCall.enqueue(new Callback<MovieResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                    if(response.isSuccessful()){
+                        view.onDataReceived(response.body().getResults(), currentPage);
+                    }else{
+                        view.onFailedReceivedData();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MovieResponse> call, Throwable t) {
                     view.onFailedReceivedData();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                view.onFailedReceivedData();
-            }
-        });
+            });
+        }
     }
 
     void setupLoader(final Context context, final ContentResolver contentResolver){

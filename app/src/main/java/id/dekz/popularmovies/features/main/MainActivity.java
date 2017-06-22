@@ -50,9 +50,13 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
 
         if (savedInstanceState != null) {
             selectedSort = savedInstanceState.getString(Constant.KEY_SELECTED_CATEGORY);
-            if(selectedSort.equals(Constant.CATEGORY_MOST_POPULAR))
+            if(selectedSort.equals(Constant.CATEGORY_MOST_POPULAR)){
                 getSupportActionBar().setSubtitle(mostPopularString);
-            else getSupportActionBar().setSubtitle(highRatedString);
+            }else if(selectedSort.equals(Constant.CATEGORY_HIGH_RATED)){
+                getSupportActionBar().setSubtitle(highRatedString);
+            }else {
+                getSupportActionBar().setSubtitle(favoritesString);
+            }
             layoutManagerSavedState = savedInstanceState.getParcelable(Constant.LAYOUT_MANAGER);
         }else{
             selectedSort = Constant.CATEGORY_MOST_POPULAR; //default
@@ -115,7 +119,13 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
         presenter.onAttach(this);
 
         setupRecyclerView();
-        presenter.loadData(selectedSort);
+        if(selectedSort.equals(Constant.CATEGORY_FAVORITES)){
+            presenter.setCategory(selectedSort);
+            presenter.setupLoader(this, getContentResolver());
+            presenter.restartLoader(getSupportLoaderManager());
+        }else{
+            presenter.loadData(selectedSort);
+        }
     }
 
     @Override
