@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindString;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     private Parcelable layoutManagerSavedState;
 
     private String selectedSort;
+    private ArrayList<MovieItem> movies = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
                 getSupportActionBar().setSubtitle(favoritesString);
             }
             layoutManagerSavedState = savedInstanceState.getParcelable(Constant.LAYOUT_MANAGER);
+            movies = savedInstanceState.getParcelableArrayList(Constant.KEY_STATE_MOVIE);
         }else{
             selectedSort = Constant.CATEGORY_MOST_POPULAR; //default
             getSupportActionBar().setSubtitle(mostPopularString);
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
         super.onSaveInstanceState(outState);
         outState.putString(Constant.KEY_SELECTED_CATEGORY, selectedSort);
         outState.putParcelable(Constant.LAYOUT_MANAGER, rv.getLayoutManager().onSaveInstanceState());
+        outState.putParcelableArrayList(Constant.KEY_STATE_MOVIE, movies);
     }
 
     @Override
@@ -146,10 +150,17 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     public void onDataReceived(List<MovieItem> data, int page) {
         Log.d("received", ""+data.size());
         if(swipeRefresh.isRefreshing()) swipeRefresh.setRefreshing(false);
+
         if(page>1){
             adapter.updateData(data);
         }else{
+            movies.clear();
+            for(MovieItem m : data){
+                movies.add(m);
+            }
+            Log.d("movies size", ""+movies.size());
             adapter.replaceAll(data);
+            Log.d("adaptersize", ""+adapter.getItemCount());
 
             //retain scroll position
             if(layoutManagerSavedState!=null){
@@ -166,10 +177,17 @@ public class MainActivity extends AppCompatActivity implements MainView, SwipeRe
     @Override
     public void onFailedReceivedData() {
         if(swipeRefresh.isRefreshing()) swipeRefresh.setRefreshing(false);
-        SnackBarBuilder.showMessage(
+        if(movies != null){
+            adapter.replaceAll(movies);
+
+            if(layoutManagerSavedState!=null){
+                rv.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
+            }
+        }
+        /*SnackBarBuilder.showMessage(
                 parentView,
                 getResources().getString(R.string.failed_load_data)
-        );
+        );*/
     }
 
     @Override

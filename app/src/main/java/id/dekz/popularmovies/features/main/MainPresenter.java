@@ -83,6 +83,7 @@ public class MainPresenter implements BasePresenter<MainView> {
 
                 @Override
                 public void onFailure(Call<MovieResponse> call, Throwable t) {
+                    t.printStackTrace();
                     view.onFailedReceivedData();
                 }
             });
